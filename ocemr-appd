@@ -6,7 +6,7 @@ from flask import Flask, redirect, url_for, render_template_string, request, fla
 from select import select
 import subprocess
 from time import sleep
-from yaml import load, dump
+from yaml import load, safe_dump
 try:
     from yaml import CLoader as Loader, CDumper as Dumper
 except ImportError:
@@ -57,7 +57,7 @@ def set_config_item(section,name,value):
     config[section][name] = value
 
     f = file("%s/%s.yaml.s"%(CONF_DIR,section), "wb")
-    dump(config[section], f)
+    safe_dump(config[section], f)
     f.close()
 
 @app.route("/")
@@ -100,7 +100,7 @@ function newPopup(url) {
 {% endfor %}
 </TABLE>
 <A HREF=/unstage_config>Cancel Staged Changes</A> or <A HREF=/commit_config>Commit Staged Changes</A>
-<BR><A HREF="JavaScript:window.location.assign('/commit_config');newPopup('/applyconfig');">Apply New Configuration</A>
+<BR><A HREF="JavaScript:newPopup('/applyconfig');">Apply New Configuration</A>
 </BODY>
 </HTML>
 
@@ -245,7 +245,7 @@ tr.changed {
     background-color:#880000;
 }
 """
-    return render_template_string(TEMPLATE)
+    return Response(TEMPLATE, mimetype='text/css')
 
 @app.route( '/applyconfig' )
 def applyconfig():
