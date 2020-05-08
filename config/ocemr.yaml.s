@@ -8,3 +8,4 @@ admin_pass: adminpassword
 admin_email: admin@localhost
 printer: ""
 papersize: Letter
+timezone: Africa/Kampala
